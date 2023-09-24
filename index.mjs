@@ -8,7 +8,7 @@ import {
   completarTarea,
 } from "./tareas.mjs";
 
-const principal = () => {
+const principal = async () => {
   while (true) {
     console.log(chalk.cyanBright("==================="));
     console.log(chalk.cyanBright.bold("       MENU       "));
@@ -39,20 +39,31 @@ const principal = () => {
         const descripcion = readlineSync.question(
           "Ingrese una descripcion para agregar una tarea: "
         );
-        agregarTarea(descripcion);
+        try {
+          await agregarTarea(descripcion);
+        } catch (error) {
+          console.log("Error al agregar tareas:", error);
+        }
         console.clear();
         break;
 
       case 2:
-        mostrarTareas();
-
+        try {
+          await mostrarTareas();
+        } catch (error) {
+          console.log("Error al mostrar las tareas:", error);
+        }
         break;
 
       case 3:
         const indiceAeliminar = readlineSync.questionInt(
           "Ingrese el indice de la tarea a eliminar: "
         );
-        eliminarTarea(indiceAeliminar - 1);
+        try {
+          await eliminarTarea(indiceAeliminar - 1);
+        } catch (error) {
+          console.log("Error al eliminar la tarea:", error);
+        }
         console.clear();
         break;
 
@@ -60,7 +71,13 @@ const principal = () => {
         const indiceAcompletar = readlineSync.questionInt(
           "Ingrese el indice de la tarea a completar: "
         );
-        completarTarea(indiceAcompletar - 1);
+        completarTarea(indiceAcompletar - 1)
+          .then(() => {
+            console.log("Tarea completada exitosamente.");
+          })
+          .catch((error) => {
+            console.error("Error al completar la tarea:", error);
+          });
         console.clear();
         break;
 
